@@ -62,7 +62,7 @@ jobs:
 
             - name: Set buildnumber in k8s deployment yaml
               if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) && ${{ success() }}
-              run: sed -i "s/BUILD_NUMBER:.*/BUILD_NUMBER: '${GITHUB_RUN_NUMBER}'/g" jhipstertest-k8s/jhipstertest-deployment.yml
+              run: "sed -i \"s/BUILD_NUMBER:.*/BUILD_NUMBER: '${GITHUB_RUN_NUMBER}'/g\" jhipstertest-k8s/jhipstertest-deployment.yml"
 
             - name: Add, commit and push modified k8s yaml without triggering new ci run
               if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) && ${{ success() }}
