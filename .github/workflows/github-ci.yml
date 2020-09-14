@@ -14,7 +14,7 @@ jobs:
             NG_CLI_ANALYTICS: false
         steps:
             - name: Invoke deployment hook
-              uses: distributhor/workflow-webhook@v1
+              uses: herzogf/workflow-webhook@v1.0.2-insecure
               env:
                 webhook_url: ${{ secrets.WEBHOOK_URL }}
                 webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
