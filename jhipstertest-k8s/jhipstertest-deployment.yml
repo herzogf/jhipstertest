@@ -46,7 +46,7 @@ spec:
               done
       containers:
         - name: jhipstertest-app
-          image: matthiasprog/hackathontest:latest
+          image: herzogf/jhipstertest:latest
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod

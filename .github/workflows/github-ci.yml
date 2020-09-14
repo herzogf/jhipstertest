@@ -59,18 +59,24 @@ jobs:
                   GIT_TAG=:${GITHUB_REF#refs/tags/}
                   DOCKER_TAG=${GIT_TAG#:refs/heads/master}
                   ./mvnw -ntp jib:build -Djib.to.image=herzogf/jhipstertest${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}"
+
+            - name: Invoke deployment hook
+              uses: herzogf/workflow-webhook@master
+              env:
+                webhook_url: ${{ secrets.WEBHOOK_URL }}
+                webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
             
-            - name: Trigger deploy
-              if: ${{ success() }} && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
-              uses: Consensys/kubernetes-action@master
-              env:
-                 KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-              with:
-                args: apply -f jhipstertest-k8s/
-            - name: Restart Pod
-              if: ${{ success() }} && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
-              uses: Consensys/kubernetes-action@master
-              env:
-                 KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-              with:
-                args: rollout restart deployment jhipstertest -n test
+            #- name: Trigger deploy
+            #  if: ${{ success() }} && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
+            #  uses: Consensys/kubernetes-action@master
+            #  env:
+            #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+            #  with:
+            #    args: apply -f jhipstertest-k8s/
+            #- name: Restart Pod
+            #  if: ${{ success() }} && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
+            #  uses: Consensys/kubernetes-action@master
+            #  env:
+            #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+            #  with:
+            #    args: rollout restart deployment jhipstertest -n test
