@@ -14,7 +14,7 @@ spec:
       labels:
         app: jhipstertest
         version: 'v1'
-        BUILD_NUMBER: 'dummy_build_number'
+        BUILD_NUMBER: '8'
     spec:
       affinity:
         podAntiAffinity:
