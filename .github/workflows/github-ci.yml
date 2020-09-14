@@ -13,70 +13,8 @@ jobs:
             JHI_DISABLE_WEBPACK_LOGS: true
             NG_CLI_ANALYTICS: false
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 12.16.1
-            - uses: actions/setup-java@v1
-              with:
-                  java-version: '11.x'
-            - name: Stop MySQL server
-              run: sudo /etc/init.d/mysql stop
-            
-            - name: Cache node.js packages
-              uses: actions/cache@v2
-              with:
-                path: node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                restore-keys: |
-                   ${{ runner.os }}-node-
-            
-            - name: Cache local Maven repository
-              uses: actions/cache@v2
-              with:
-                path: ~/.m2/repository
-                key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-                restore-keys: |
-                     ${{ runner.os }}-maven-
-            
-            - name: Install node.js packages
-              run: npm install
-            
-            - name: Run backend test
-              run: |
-                  chmod +x mvnw
-                  ./mvnw -ntp verify -P-webpack
-            
-            - name: Run frontend test
-              run: npm run test
-            
-            - name: Package application
-              run: ./mvnw -ntp package -Pprod -DskipTests
-            
-            - name: Build and publish docker image
-              if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) && ${{ success() }}
-              run: |
-                  GIT_TAG=:${GITHUB_REF#refs/tags/}
-                  DOCKER_TAG=${GIT_TAG#:refs/heads/master}
-                  ./mvnw -ntp jib:build -Djib.to.image=herzogf/jhipstertest${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}"
-
             - name: Invoke deployment hook
-              uses: herzogf/workflow-webhook@master
+              uses: distributhor/workflow-webhook@v1
               env:
                 webhook_url: ${{ secrets.WEBHOOK_URL }}
                 webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
-            
-            #- name: Trigger deploy
-            #  if: ${{ success() }} && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
-            #  uses: Consensys/kubernetes-action@master
-            #  env:
-            #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-            #  with:
-            #    args: apply -f jhipstertest-k8s/
-            #- name: Restart Pod
-            #  if: ${{ success() }} && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
-            #  uses: Consensys/kubernetes-action@master
-            #  env:
-            #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-            #  with:
-            #    args: rollout restart deployment jhipstertest -n test
