@@ -76,9 +76,3 @@ jobs:
               uses: ad-m/github-push-action@master
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Invoke deployment hook
-              uses: herzogf/workflow-webhook@v1.0.2-insecure
-              env:
-                webhook_url: ${{ secrets.WEBHOOK_URL }}
-                webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
