@@ -76,3 +76,11 @@ jobs:
               uses: ad-m/github-push-action@master
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Sync argocd application
+              uses: herzogf/action-argocd-sync-app@master
+              with:
+                server: ${{ secrets.ARGOCD_SERVER }}
+                auth_token: ${{ secrets.ARGOCD_AUTH_TOKEN }}
+                app: team-1-jhipster
+
