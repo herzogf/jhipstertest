@@ -1,3 +1,7 @@
+[![sync status](https://argocd.homek8s.dev/api/badge?name=team-1-jhipster)](https://argocd.homek8s.dev/applications/team-1-jhipster) [![Build status](https://github.com/herzogf/jhipstertest/workflows/Application%20CI/badge.svg)](https://github.com/herzogf/jhipstertest/actions?query=workflow%3A%22Application+CI%22)
+
+---
+
 # jhipstertest
 
 This application was generated using JHipster 6.9.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.9.1](https://www.jhipster.tech/documentation-archive/v6.9.1).
