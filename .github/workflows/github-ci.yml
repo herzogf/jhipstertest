@@ -85,4 +85,5 @@ jobs:
                 server: ${{ secrets.ARGOCD_SERVER }}
                 auth_token: ${{ secrets.ARGOCD_AUTH_TOKEN }}
                 app: team-1-jhipster
+                wait_timeout: '300'
 
